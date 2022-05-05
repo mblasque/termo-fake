@@ -1,0 +1,38 @@
+.main-box {
+    width: 590px;
+    margin: 100px auto;
+
+    .attempt-box {
+        display: flex;
+        margin: 15px;
+
+        .letter-box {
+            margin-right: 10px;
+            height: 100px;
+            width: 100px;
+            border: solid 1px;
+            display: flex;
+    
+            span {
+                margin: auto;
+            }
+    
+            &.exist {
+                background-color: lightyellow;
+            }
+    
+            &.right {
+                background-color: lightgreen;
+            }
+    
+            &.wrong {
+                background-color: gray;
+            }
+        }        
+    }
+}
+
+.form {
+    margin: auto;
+    display: table;
+}
