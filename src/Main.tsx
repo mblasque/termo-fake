@@ -26,7 +26,7 @@ function Main() {
         var rightChars = [] as String[];
 
         for (let i = 0; i <= typedStr.length; i++)
-            if (word[i] == typedStr[i])
+            if (word[i] === typedStr[i])
                 rightChars.push(typedStr[i])
 
         const handleExistingChar = (char: string) => {
@@ -39,7 +39,7 @@ function Main() {
         }
 
         const getDecision = (i: number) => {
-            return word[i] == typedStr[i]
+            return word[i] === typedStr[i]
                 ? "right"
                 : word.includes(typedStr[i])
                     ? handleExistingChar(typedStr[i])
@@ -57,11 +57,12 @@ function Main() {
 
         attempts.push({ letters: letters } as Attempt);
         setAttemptNum(attemptNum + 1);
+        (document.getElementById("try") as HTMLInputElement).value = "";
     }
 
     return (<>
         <div className='main-box'>
-            {[0, 1, 2, 3, 4].map(attempt => {
+            {[0, 1, 2, 3, 4, 5].map(attempt => {
                 return (
                     <div className="attempt-box">
                         {[0, 1, 2, 3, 4].map(letter => {
@@ -76,6 +77,7 @@ function Main() {
                     </div>)
             })}
         </div>
+        {attempts.length === 6 && <span>{word}</span>}
         <div className='form'>
             <form onSubmit={(e) => { e.preventDefault(); checkWord(); }}>
                 <input id="try" maxLength={5}></input>
