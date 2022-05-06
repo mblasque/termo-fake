@@ -1,6 +1,17 @@
+$normal-box-size: 70px;
+$normal-font-size: 32px;
+
+$mobile-box-size: 50px;
+$mobile-font-size: 28px;
+
+.form {
+    margin: auto;
+    display: table;
+}
+
 .main-box {
-    width: 590px;
-    margin: 100px auto;
+    display: table;
+    margin: 50px auto;
 
     .attempt-box {
         display: flex;
@@ -8,12 +19,16 @@
 
         .letter-box {
             margin-right: 10px;
-            height: 100px;
-            width: 100px;
-            border: solid 1px;
+            height: $normal-box-size;
+            width: $normal-box-size;
+            border: solid 3px #888888;
             display: flex;
+            border-radius: 5px;
     
             span {
+                color: #333333;
+                font-weight: 700;
+                font-size: $normal-font-size;
                 margin: auto;
             }
     
@@ -30,9 +45,15 @@
             }
         }        
     }
-}
 
-.form {
-    margin: auto;
-    display: table;
+    @media (max-width: 790px) {
+        .attempt-box {    
+            margin: 10px;
+
+            .letter-box {
+                height: $mobile-box-size;
+                width: $mobile-box-size;
+            }
+        }
+    }
 }

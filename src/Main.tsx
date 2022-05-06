@@ -24,6 +24,7 @@ function Main() {
         if (typedStr.length < 5) return;
 
         var rightChars = [] as String[];
+        var existingChars = [] as String[];
 
         for (let i = 0; i <= typedStr.length; i++)
             if (word[i] === typedStr[i])
@@ -32,9 +33,10 @@ function Main() {
         const handleExistingChar = (char: string) => {
             var qtyCharInWord = word.filter(x => x === char).length;
 
-            if (qtyCharInWord === rightChars.filter(x => x === char).length)
+            if (qtyCharInWord === rightChars.filter(x => x === char).length + existingChars.filter(x => x === char).length)
                 return "wrong";
 
+            existingChars.push(char)
             return "exist";
         }
 
