@@ -1,59 +1,102 @@
 $normal-box-size: 70px;
 $normal-font-size: 32px;
+$keyboard-box-size: 50px;
 
 $mobile-box-size: 50px;
 $mobile-font-size: 28px;
+$mobile-keyboard-box-size: 30px;
 
 .form {
-    margin: auto;
-    display: table;
+  margin: auto;
+  display: table;
 }
 
-.main-box {
-    display: table;
-    margin: 50px auto;
+.tf-kbd {
+  margin: auto;
 
-    .attempt-box {
-        display: flex;
-        margin: 15px;
+  > div {
+    justify-content: center;
+    display: inline-flex;
+    width: 100%;
+  }
 
-        .letter-box {
-            margin-right: 10px;
-            height: $normal-box-size;
-            width: $normal-box-size;
-            border: solid 3px #888888;
-            display: flex;
-            border-radius: 5px;
-    
-            span {
-                color: #333333;
-                font-weight: 700;
-                font-size: $normal-font-size;
-                margin: auto;
-            }
-    
-            &.exist {
-                background-color: lightyellow;
-            }
-    
-            &.right {
-                background-color: lightgreen;
-            }
-    
-            &.wrong {
-                background-color: gray;
-            }
-        }        
+  .letter {
+    margin: 5px;
+    border: solid 1px;
+    height: $keyboard-box-size;
+    width: $keyboard-box-size;
+    display: flex;
+    cursor: pointer;
+
+    span {
+      margin: auto;
+    }
+
+    &.wrong {
+      background-color: lightgray;
+    }
+
+    &.existing {
+      background-color: lightyellow;
+    }
+
+    &.right {
+      background-color: lightgreen;
     }
 
     @media (max-width: 790px) {
-        .attempt-box {    
-            margin: 10px;
-
-            .letter-box {
-                height: $mobile-box-size;
-                width: $mobile-box-size;
-            }
-        }
+      margin: 2px;
+      height: $mobile-keyboard-box-size;
+      width: $mobile-keyboard-box-size;
     }
+  }
+}
+
+.main-box {
+  display: table;
+  margin: 50px auto;
+
+  .attempt-box {
+    display: flex;
+    margin: 15px;
+
+    .letter-box {
+      margin-right: 10px;
+      height: $normal-box-size;
+      width: $normal-box-size;
+      border: solid 3px #888888;
+      display: flex;
+      border-radius: 5px;
+
+      span {
+        color: #333333;
+        font-weight: 700;
+        font-size: $normal-font-size;
+        margin: auto;
+      }
+
+      &.exist {
+        background-color: lightyellow;
+      }
+
+      &.right {
+        background-color: lightgreen;
+      }
+
+      &.wrong {
+        background-color: #aaaaaa;
+      }
+    }
+  }
+
+  @media (max-width: 790px) {
+    .attempt-box {
+      margin: 10px;
+
+      .letter-box {
+        height: $mobile-box-size;
+        width: $mobile-box-size;
+      }
+    }
+  }
 }
