@@ -5,9 +5,6 @@ import "./Main.scss";
 
 type MainObj = {
   attempts: Attempt[];
-  wrongChars: string[];
-  existingChars: string[];
-  rightChars: string[];
 };
 
 type Attempt = {
@@ -19,28 +16,28 @@ type Letter = {
   decision: string;
 };
 
+
 var word = fiveWords[Math.floor(Math.random() * 1000)].toUpperCase();
 
 var wordArray = Array.from(
-  fiveWords[Math.floor(Math.random() * 1000)]
-    .toUpperCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+  word.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 );
 
-const keys = [
-  ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
-  ["A", "S", "D", "F", "G", "H", "J", "K", "L", "⌫"],
-  ["Z", "X", "C", "V", "B", "N", "M", "↩"],
+const keyBoard = [
+  { line: 1, keys: ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"] },
+  { line: 2, keys: ["A", "S", "D", "F", "G", "H", "J", "K", "L", "⌫"] },
+  { line: 3, keys: ["Z", "X", "C", "V", "B", "N", "M", "↩"] },
 ];
 
 function Main() {
   const [attemptNum, setAttemptNum] = useState<number>(0);
+
+  const [correctLetters, setCorrectLetters] = useState<string[]>([]);
+  const [existingLetters, setExistingLetters] = useState<string[]>([]);
+  const [wrongLetters, setWrongLetters] = useState<string[]>([]);
+
   const [obj, setObj] = useState<MainObj>({
-    attempts: [{ letters: [] }],
-    wrongChars: [],
-    existingChars: [],
-    rightChars: [],
+    attempts: [{ letters: [] }]
   });
 
   const onLetterPress = (key: string) => {
@@ -80,9 +77,9 @@ function Main() {
     const key = event.key.toUpperCase();
 
     if (
-      keys[0].includes(key) ||
-      keys[1].includes(key) ||
-      keys[2].includes(key)
+      keyBoard[0].keys.includes(key) ||
+      keyBoard[1].keys.includes(key) ||
+      keyBoard[2].keys.includes(key)
     ) {
       onLetterPress(key);
     }
@@ -113,11 +110,11 @@ function Main() {
     if (att.length < 5) return;
 
     for (let i = 0; i < att.length; i++) 
-      if (wordArray[i] === att[i].letter) rightChars.push(att[i].letter);
+      if (wordArray[i] === att[i].letter)  
+        rightChars.push(att[i].letter);
 
     const handleWrongChar = (char: string) => {
-      obj.wrongChars.push(char);
-      setObj({ ...obj });
+      setWrongLetters([...wrongLetters, char]);;
       return "wrong";
     };
 
@@ -129,18 +126,15 @@ function Main() {
         rightChars.filter((x) => x === char).length +
           existingChars.filter((x) => x === char).length
       ) {
-        handleWrongChar(char);
+        return handleWrongChar(char);
       }
 
-      existingChars.push(char);
-      obj.existingChars.push(char);
-      setObj({ ...obj });
+      setExistingLetters([...existingLetters, char]);
       return "exist";
     };
 
     const handleRightChar = (char: string) => {
-      obj.rightChars.push(char);
-      setObj({ ...obj });
+      setCorrectLetters([...correctLetters, char]);
       return "right";
     }
 
@@ -165,16 +159,17 @@ function Main() {
   return (
     <>
       <div className="main-box">
-        {[0, 1, 2, 3, 4, 5].map((attempt) => {
+        {[0, 1, 2, 3, 4, 5].map((attemptIndex) => {
           return (
-            <div className="attempt-box">
-              {[0, 1, 2, 3, 4].map((letter) => {
+            <div key={attemptIndex} className="attempt-box">
+              {[0, 1, 2, 3, 4].map((letterIndex) => {
                 return (
                   <div
-                    className={`letter-box ${obj.attempts[attempt]?.letters[letter]?.decision}`}
+                    key={letterIndex}
+                    className={`letter-box ${obj.attempts[attemptIndex]?.letters[letterIndex]?.decision}`}
                   >
                     <span>
-                      {obj.attempts[attempt]?.letters[letter]?.letter}
+                      {obj.attempts[attemptIndex]?.letters[letterIndex]?.letter}
                     </span>
                   </div>
                 );
@@ -184,17 +179,17 @@ function Main() {
         })}
       </div>
       <div className="tf-kbd">
-        {keys.map((line) => {
+        {keyBoard.map((line) => {
           return (
-            <div>
-              {line.map((letter) => {
+            <div key={line.line}>
+              {line.keys.map((letter) => {
                 return (
                   <div
                     onClick={() => onLetterPress(letter)}
                     className={`letter 
-                    ${obj.rightChars.includes(letter) ? "right" : ""}
-                    ${obj.existingChars.includes(letter) ? "existing" : ""}
-                    ${obj.wrongChars.includes(letter) ? "wrong" : ""}`}
+                    ${correctLetters.includes(letter) ? "right" : ""}
+                    ${existingLetters.includes(letter) ? "existing" : ""}
+                    ${wrongLetters.includes(letter) ? "wrong" : ""}`}
                   >
                     <span>{letter}</span>
                   </div>
