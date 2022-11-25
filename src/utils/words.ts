@@ -1,4 +1,4 @@
-export const fiveWords = [
+const fiveWords = [
     "sagaz",
     "âmago",
     "negro",
@@ -1000,3 +1000,5 @@ export const fiveWords = [
     "rédea",
     "árdua",
 ];
+
+export const get5LettersWord = () => { return fiveWords[Math.floor(Math.random() * 1000)].toUpperCase(); };

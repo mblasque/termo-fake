@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
-import { fiveWords } from "./utils/words";
+import { get5LettersWord } from "./utils/words";
 
 import "./Main.scss";
-
-type MainObj = {
-  attempts: Attempt[];
-};
 
 type Attempt = {
   letters: Letter[];
@@ -16,8 +12,7 @@ type Letter = {
   decision: string;
 };
 
-
-var word = fiveWords[Math.floor(Math.random() * 1000)].toUpperCase();
+var word = get5LettersWord();
 
 var wordArray = Array.from(
   word.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -36,9 +31,7 @@ function Main() {
   const [existingLetters, setExistingLetters] = useState<string[]>([]);
   const [wrongLetters, setWrongLetters] = useState<string[]>([]);
 
-  const [obj, setObj] = useState<MainObj>({
-    attempts: [{ letters: [] }]
-  });
+  const [attempts, setAttempts] = useState<Attempt[]>([{ letters: [] }]);
 
   const onLetterPress = (key: string) => {
     if (key === "↩") {
@@ -51,26 +44,29 @@ function Main() {
       return;
     }
 
-    var attempts = obj.attempts;
+    var letters = [...attempts[attemptNum].letters];
 
-    if (!attempts[attemptNum]) attempts.push({ letters: [] });
+    if (letters.length === 5) return;
 
-    if (attempts[attemptNum].letters.length === 5) return;
-
-    attempts[attemptNum].letters.push({
+    letters.push({
       letter: key,
       decision: "",
     } as Letter);
 
-    setObj({ ...obj });
+    attempts[attemptNum].letters = letters;
+
+    setAttempts([...attempts]);
   };
 
   const removeLastChar = () => {
-    obj.attempts[attemptNum].letters.splice(
-      obj.attempts[attemptNum].letters.length - 1,
+    var aux = [...attempts]
+
+    aux[attemptNum].letters.splice(
+      aux[attemptNum].letters.length - 1,
       1
     );
-    setObj({ ...obj });
+
+    setAttempts(aux);
   };
 
   const onKeyPress = (event: KeyboardEvent) => {
@@ -105,13 +101,13 @@ function Main() {
     var rightChars = [] as String[];
     var existingChars = [] as String[];
 
-    var att = obj.attempts[attemptNum].letters;
-
-    if (att.length < 5) return;
-
-    for (let i = 0; i < att.length; i++) 
-      if (wordArray[i] === att[i].letter)  
-        rightChars.push(att[i].letter);
+    var att = attempts[attemptNum].letters;
+    
+    const checkCorrectPlacedLetters = () => {
+      for (let i = 0; i < att.length; i++)
+        if (wordArray[i] === att[i].letter)
+          rightChars.push(att[i].letter);
+    }
 
     const handleWrongChar = (char: string) => {
       setWrongLetters([...wrongLetters, char]);;
@@ -124,11 +120,12 @@ function Main() {
       if (
         qtyCharInWord ===
         rightChars.filter((x) => x === char).length +
-          existingChars.filter((x) => x === char).length
+        existingChars.filter((x) => x === char).length
       ) {
         return handleWrongChar(char);
       }
 
+      existingChars.push(char);
       setExistingLetters([...existingLetters, char]);
       return "exist";
     };
@@ -142,17 +139,23 @@ function Main() {
       return wordArray[i] === att[i].letter
         ? handleRightChar(att[i].letter)
         : wordArray.includes(att[i].letter)
-        ? handleExistingChar(att[i].letter)
-        : handleWrongChar(att[i].letter);
+          ? handleExistingChar(att[i].letter)
+          : handleWrongChar(att[i].letter);
     };
 
-    for (let i = 0; i < att.length; i++) att[i].decision = getDecision(i);
+    if (att.length < 5) return;
+
+    checkCorrectPlacedLetters();
+
+    for (let i = 0; i < att.length; i++) 
+      att[i].decision = getDecision(i);
 
     if (attemptNum === 5) {
       alert(word);
       return;
     }
 
+    setAttempts([...attempts, { letters: [] }]);
     setAttemptNum(attemptNum + 1);
   };
 
@@ -166,10 +169,10 @@ function Main() {
                 return (
                   <div
                     key={letterIndex}
-                    className={`letter-box ${obj.attempts[attemptIndex]?.letters[letterIndex]?.decision}`}
+                    className={`letter-box ${attempts[attemptIndex]?.letters[letterIndex]?.decision}`}
                   >
                     <span>
-                      {obj.attempts[attemptIndex]?.letters[letterIndex]?.letter}
+                      {attempts[attemptIndex]?.letters[letterIndex]?.letter}
                     </span>
                   </div>
                 );
@@ -184,7 +187,7 @@ function Main() {
             <div key={line.line}>
               {line.keys.map((letter) => {
                 return (
-                  <div
+                  <div key={letter}
                     onClick={() => onLetterPress(letter)}
                     className={`letter 
                     ${correctLetters.includes(letter) ? "right" : ""}
