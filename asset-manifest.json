@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/termo-fake/static/css/main.5da42e9a.css",
-    "main.js": "/termo-fake/static/js/main.b9cca979.js",
+    "main.css": "/termo-fake/static/css/main.8891b96e.css",
+    "main.js": "/termo-fake/static/js/main.67035a8b.js",
     "index.html": "/termo-fake/index.html",
-    "main.5da42e9a.css.map": "/termo-fake/static/css/main.5da42e9a.css.map",
-    "main.b9cca979.js.map": "/termo-fake/static/js/main.b9cca979.js.map"
+    "main.8891b96e.css.map": "/termo-fake/static/css/main.8891b96e.css.map",
+    "main.67035a8b.js.map": "/termo-fake/static/js/main.67035a8b.js.map"
   },
   "entrypoints": [
-    "static/css/main.5da42e9a.css",
-    "static/js/main.b9cca979.js"
+    "static/css/main.8891b96e.css",
+    "static/js/main.67035a8b.js"
   ]
 }
