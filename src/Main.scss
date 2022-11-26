@@ -21,6 +21,7 @@ $mobile-keyboard-box-size: 30px;
   }
 
   .letter {
+    background-color: white;
     margin: 5px;
     border: solid 1px;
     height: $keyboard-box-size;
@@ -42,6 +43,10 @@ $mobile-keyboard-box-size: 30px;
 
     &.right {
       background-color: lightgreen;
+    }
+
+    &:focus-visible {
+      outline: none;
     }
 
     @media (max-width: 790px) {

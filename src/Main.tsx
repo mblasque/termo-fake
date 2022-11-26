@@ -187,7 +187,7 @@ function Main() {
             <div key={line.line}>
               {line.keys.map((letter) => {
                 return (
-                  <div key={letter}
+                  <button key={letter}
                     onClick={() => onLetterPress(letter)}
                     className={`letter 
                     ${correctLetters.includes(letter) ? "right" : ""}
@@ -195,7 +195,7 @@ function Main() {
                     ${wrongLetters.includes(letter) ? "wrong" : ""}`}
                   >
                     <span>{letter}</span>
-                  </div>
+                  </button>
                 );
               })}
             </div>
