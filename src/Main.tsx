@@ -110,7 +110,7 @@ function Main() {
     }
 
     const handleWrongChar = (char: string) => {
-      setWrongLetters([...wrongLetters, char]);;
+      setWrongLetters(prevState => [...prevState, char]);
       return "wrong";
     };
 
@@ -126,7 +126,7 @@ function Main() {
       }
 
       existingChars.push(char);
-      setExistingLetters([...existingLetters, char]);
+      setExistingLetters(prevState => [...prevState, char]);
       return "exist";
     };
 
