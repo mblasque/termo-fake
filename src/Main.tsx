@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { get5LettersWord } from "./utils/words";
+import Keyboard from "./Components/Keyboard";
+import AttemptBox from "./Components/AttemptsBox";
 
 import "./Main.scss";
 
-type Attempt = {
+export type Attempt = {
   letters: Letter[];
 };
 
@@ -18,13 +20,7 @@ var wordArray = Array.from(
   word.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 );
 
-const keyBoard = [
-  { line: 1, keys: ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"] },
-  { line: 2, keys: ["A", "S", "D", "F", "G", "H", "J", "K", "L", "⌫"] },
-  { line: 3, keys: ["Z", "X", "C", "V", "B", "N", "M", "↩"] },
-];
-
-function Main() {
+export function Main() {
   const [attemptNum, setAttemptNum] = useState<number>(0);
 
   const [correctLetters, setCorrectLetters] = useState<string[]>([]);
@@ -59,58 +55,26 @@ function Main() {
   };
 
   const removeLastChar = () => {
-    var aux = [...attempts]
+    var aux = [...attempts];
 
-    aux[attemptNum].letters.splice(
-      aux[attemptNum].letters.length - 1,
-      1
-    );
+    aux[attemptNum].letters.splice(aux[attemptNum].letters.length - 1, 1);
 
     setAttempts(aux);
   };
-
-  const onKeyPress = (event: KeyboardEvent) => {
-    const key = event.key.toUpperCase();
-
-    if (
-      keyBoard[0].keys.includes(key) ||
-      keyBoard[1].keys.includes(key) ||
-      keyBoard[2].keys.includes(key)
-    ) {
-      onLetterPress(key);
-    }
-
-    if (key === "ENTER") {
-      checkWord();
-    }
-
-    if (key === "BACKSPACE") {
-      removeLastChar();
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("keydown", onKeyPress);
-
-    return () => {
-      document.removeEventListener("keydown", onKeyPress);
-    };
-  }, [attemptNum]);
 
   const checkWord = () => {
     var rightChars = [] as String[];
     var existingChars = [] as String[];
 
     var att = attempts[attemptNum].letters;
-    
+
     const checkCorrectPlacedLetters = () => {
       for (let i = 0; i < att.length; i++)
-        if (wordArray[i] === att[i].letter)
-          rightChars.push(att[i].letter);
-    }
+        if (wordArray[i] === att[i].letter) rightChars.push(att[i].letter);
+    };
 
     const handleWrongChar = (char: string) => {
-      setWrongLetters(prevState => [...prevState, char]);
+      setWrongLetters((prevState) => [...prevState, char]);
       return "wrong";
     };
 
@@ -120,35 +84,34 @@ function Main() {
       if (
         qtyCharInWord ===
         rightChars.filter((x) => x === char).length +
-        existingChars.filter((x) => x === char).length
+          existingChars.filter((x) => x === char).length
       ) {
         return handleWrongChar(char);
       }
 
       existingChars.push(char);
-      setExistingLetters(prevState => [...prevState, char]);
+      setExistingLetters((prevState) => [...prevState, char]);
       return "exist";
     };
 
     const handleRightChar = (char: string) => {
       setCorrectLetters([...correctLetters, char]);
       return "right";
-    }
+    };
 
     const getDecision = (i: number) => {
       return wordArray[i] === att[i].letter
         ? handleRightChar(att[i].letter)
         : wordArray.includes(att[i].letter)
-          ? handleExistingChar(att[i].letter)
-          : handleWrongChar(att[i].letter);
+        ? handleExistingChar(att[i].letter)
+        : handleWrongChar(att[i].letter);
     };
 
     if (att.length < 5) return;
 
     checkCorrectPlacedLetters();
 
-    for (let i = 0; i < att.length; i++) 
-      att[i].decision = getDecision(i);
+    for (let i = 0; i < att.length; i++) att[i].decision = getDecision(i);
 
     if (attemptNum === 5) {
       alert(word);
@@ -161,49 +124,16 @@ function Main() {
 
   return (
     <>
-      <div className="main-box">
-        {[0, 1, 2, 3, 4, 5].map((attemptIndex) => {
-          return (
-            <div key={attemptIndex} className="attempt-box">
-              {[0, 1, 2, 3, 4].map((letterIndex) => {
-                return (
-                  <div
-                    key={letterIndex}
-                    className={`letter-box ${attempts[attemptIndex]?.letters[letterIndex]?.decision}`}
-                  >
-                    <span>
-                      {attempts[attemptIndex]?.letters[letterIndex]?.letter}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
-      <div className="tf-kbd">
-        {keyBoard.map((line) => {
-          return (
-            <div key={line.line}>
-              {line.keys.map((letter) => {
-                return (
-                  <button key={letter}
-                    onClick={() => onLetterPress(letter)}
-                    className={`letter 
-                    ${correctLetters.includes(letter) ? "right" : ""}
-                    ${existingLetters.includes(letter) ? "existing" : ""}
-                    ${wrongLetters.includes(letter) ? "wrong" : ""}`}
-                  >
-                    <span>{letter}</span>
-                  </button>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
+      <AttemptBox attempts={attempts} />
+      <Keyboard
+        attemptNum={attemptNum}
+        checkWord={checkWord}
+        onLetterPress={onLetterPress}
+        removeLastChar={removeLastChar}
+        correctLetters={correctLetters}
+        existingLetters={existingLetters}
+        wrongLetters={wrongLetters}
+      />
     </>
   );
 }
-
-export default Main;

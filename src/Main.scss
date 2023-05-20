@@ -1,60 +1,12 @@
 $normal-box-size: 70px;
 $normal-font-size: 32px;
-$keyboard-box-size: 50px;
 
 $mobile-box-size: 50px;
 $mobile-font-size: 28px;
-$mobile-keyboard-box-size: 30px;
 
 .form {
   margin: auto;
   display: table;
-}
-
-.tf-kbd {
-  margin: auto;
-
-  > div {
-    justify-content: center;
-    display: inline-flex;
-    width: 100%;
-  }
-
-  .letter {
-    background-color: white;
-    margin: 5px;
-    border: solid 1px;
-    height: $keyboard-box-size;
-    width: $keyboard-box-size;
-    display: flex;
-    cursor: pointer;
-
-    span {
-      margin: auto;
-    }
-
-    &.wrong {
-      background-color: lightgray;
-    }
-
-    &.existing {
-      background-color: lightyellow;
-    }
-
-    &.right {
-      background-color: lightgreen;
-    }
-
-    &:focus-visible {
-      outline: none;
-    }
-
-    @media (max-width: 790px) {
-      margin: 2px;
-      height: $mobile-keyboard-box-size;
-      width: $mobile-keyboard-box-size;
-    }
-  }
 }
 
 .main-box {
